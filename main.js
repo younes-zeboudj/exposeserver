@@ -89,6 +89,7 @@ console.log(`adding iptables rule`);
 child_process.execSync(`sudo iptables -I INPUT -m state --state NEW -p tcp --dport ${external_port} -j ACCEPT`)
 
 if (command_interface) {
+    console.log(`creating command interface`);
     const server_dir = `server.tmp.${Date.now()}`
     fs.mkdirSync(server_dir)
 
@@ -112,7 +113,7 @@ app.get('/', (req, res)=>{
 app.listen(parseInt(process.argv[2]) || ${local_port}, ()=>{})
 `)
 
-    child_process.execSync(`nohup node ${server_file}`)
+    child_process.execSync(`nohup node ${server_file}&`)
 
     console.log(`command interface running on port ${local_port}`);
 }
