@@ -1,0 +1,12 @@
+{
+  "name": "makeserver",
+  "version": "1.0.0",
+  "description": "A tool to make a server with node.js. Uses apache2 and express.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
