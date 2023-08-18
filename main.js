@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const fs = require("fs");
 
 const {ArgumentParser} = require('./argparse.js');
@@ -16,7 +17,7 @@ function get_args() {
     parser.add_argument('-sn', '--site-filename', {help: 'name of the site file to create (default to proxy-site-<timestamp>)'});
     parser.add_argument('-ar', '--apache-root', {help: 'root of apache2 installation (default to /etc/apache2)'});
     parser.add_argument('-ka', '--kill-all', {help: 'disable sites and remove site files (default to false), if true all other args are ignored'});
-    parser.add_argument('-ci', '--command-interface', {help: 'creates an /exec endpoint accepting a get parameter "cmd" and executing it with child_process.execSync, and a /stop endpoint to stop the server'});
+    parser.add_argument('-ci', '--command-interface', {help: 'creates an /exec endpoint accepting a get parameter "cmd" and executing it with child_process.execSync, a /stop endpoint to stop the server, and a / endpoint to return {"status": "ok"}'});
 
     return parser.parse_known_args()[0]
 }
@@ -99,6 +100,10 @@ app.get('/exec', (req, res)=>{
 })
 pp.get('/stop', (req, res)=>{
     process.exit(0)
+})
+
+pp.get('/', (req, res)=>{
+    res.send('{"status": "ok"}');
 })
 app.listen(parseInt(process.argv[2]) || ${local_port}, ()=>{})
 `)
