@@ -1,5 +1,7 @@
 A simple tool to create a server and expose it to the internet using nodejs.
 
+The script will create an apache virtual host that listens on a given port and forwards traffic received at that port to some local port. The script can also create a local server that listen on the local port with some useful endpoints (see `ci` argument).
+
 NOTE (for those who are confused whther they can use this tool or not):
  - The machine to use to create the server must not have a firewall blocking traffic on the port you want to expose to the internet,
  - For cloud providers you probably need to add a rule in the firewall, unless you use a port that is used by default,
@@ -7,11 +9,12 @@ NOTE (for those who are confused whther they can use this tool or not):
 
 # Installation
 
-    npm install makeserver
+    npm install -g exposeserver
 
 # Usage
+You need to have super user privileges.
 
-    main.js [-h] [-xp SERVER_PORT] [-lp PROXY_PORT] [-lh LOCAL_HOST] [-sn SITE_FILENAME] [-ar APACHE_ROOT] [-ka KILL_ALL]
+    sudo exposeserver [-h] [-xp SERVER_PORT] [-lp PROXY_PORT] [-lh LOCAL_HOST] [-sn SITE_FILENAME] [-ar APACHE_ROOT] [-ka KILL_ALL]
                [-ci COMMAND_INTERFACE]
 
 
