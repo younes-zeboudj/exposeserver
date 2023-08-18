@@ -34,11 +34,13 @@ You need to have super user privileges.
                             name of the site file to create (default to proxy-site-<timestamp>)
     -ar APACHE_ROOT, --apache-root APACHE_ROOT
                             root of apache2 installation (default to /etc/apache2)
-    -ka KILL_ALL, --kill-all KILL_ALL
+    -ka 1, --kill-all 1
                             disable sites and remove site files (default to false), if true all other args are ignored
-    -ci COMMAND_INTERFACE, --command-interface COMMAND_INTERFACE
+    -ci 1, --command-interface 1
                             creates an /exec endpoint accepting a get parameter "cmd" and executing it with child_process.execSync, and
                             a /stop endpoint to stop the server
+
+
 
 # Example
     
