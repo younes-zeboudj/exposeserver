@@ -1,6 +1,6 @@
 {
   "name": "exposeserver",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A tool to make a server with node.js. Uses apache2 and express.",
   "main": "main.js",
   "scripts": {
@@ -12,5 +12,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/younes-zeboudj/exposeserver"
-  }
+  },
+  "bin": "main.js"
 }
