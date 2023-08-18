@@ -1,6 +1,6 @@
 {
   "name": "exposeserver",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A tool to make a server with node.js. Uses apache2 and express.",
   "main": "main.js",
   "scripts": {
