@@ -11,6 +11,10 @@ NOTE (for those who are confused whther they can use this tool or not):
 
     npm install -g exposeserver
 
+# Requirements
+
+    - Apache2
+
 # Usage
 You need to have super user privileges.
 
