@@ -1,5 +1,5 @@
 {
-  "name": "makeserver",
+  "name": "exposeserver",
   "version": "1.0.0",
   "description": "A tool to make a server with node.js. Uses apache2 and express.",
   "main": "main.js",
@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/younes-zeboudj/exposeserver"
+
 }
