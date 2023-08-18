@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "repository": {
-  "type": "git",
-  "url": "https://github.com/younes-zeboudj/exposeserver"
-
+    "type": "git",
+    "url": "https://github.com/younes-zeboudj/exposeserver"
+  }
 }
