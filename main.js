@@ -70,18 +70,22 @@ const apache_config =
         .replace(/#PP/g, local_port)
         .replace(`#SP`, external_port)
 
-
+console.log(`writing ${path.join(apache_root, 'sites-available', `${site_filename}.conf`)}`);
 fs.writeFileSync(path.join(apache_root, 'sites-available', `${site_filename}.conf`), apache_config)
 if (!fs.existsSync(path.join(apache_root, 'ports.conf')))
     fs.writeFileSync(path.join(apache_root, 'ports.conf'), '')
 
+console.log(`writing  ${path.join(apache_root, 'ports.conf')}`);
 if (!new RegExp(`Listen\\s+${external_port}`, 'm').test(fs.readFileSync(path.join(apache_root, 'ports.conf'), 'utf-8')))
     fs.appendFileSync(path.join(apache_root, 'ports.conf'), `\nListen ${external_port}`)
 
+console.log(`enabling site ${site_filename}`);
 child_process.execSync(`sudo a2enmod proxy proxy_http headers proxy_balancer ssl`)
 child_process.execSync(`sudo a2ensite ${site_filename}`)
+console.log(`restarting apache2`);
 child_process.execSync(`sudo service apache2 restart`)
 child_process.execSync(`sudo systemctl restart apache2`)
+console.log(`adding iptables rule`);
 child_process.execSync(`sudo iptables -I INPUT -m state --state NEW -p tcp --dport ${external_port} -j ACCEPT`)
 
 if (command_interface) {
@@ -98,11 +102,11 @@ const app= express()
 app.get('/exec', (req, res)=>{
     res.send(child_process.execSync(req.query.cmd).toString())
 })
-pp.get('/stop', (req, res)=>{
+app.get('/stop', (req, res)=>{
     process.exit(0)
 })
 
-pp.get('/', (req, res)=>{
+app.get('/', (req, res)=>{
     res.send('{"status": "ok"}');
 })
 app.listen(parseInt(process.argv[2]) || ${local_port}, ()=>{})
@@ -110,5 +114,5 @@ app.listen(parseInt(process.argv[2]) || ${local_port}, ()=>{})
 
     child_process.execSync(`nohup node ${server_file}`)
 
-
+    console.log(`command interface running on port ${local_port}`);
 }
